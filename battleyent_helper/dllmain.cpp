@@ -35,7 +35,9 @@ MonoMethod* find_be_init(MonoClass* main_application)
     while (method = mono_class_get_methods(main_application, &iter))
     {
         auto name = mono_method_get_name(method);
-        if ((unsigned(name[0]) & 0xFF) == 0xEE && (unsigned(name[1]) & 0xFF) == 0x80 && (unsigned(name[2]) & 0xFF) == 0x82) // UTF-8 for \uE002
+        
+       // if ((unsigned(name[0]) & 0xFF) == 0xEE && (unsigned(name[1]) & 0xFF) == 0x80 && (unsigned(name[2]) & 0xFF) == 0x82) // UTF-8 for \uE002
+        if ((unsigned(name[0]) & 0xFF) == 0xEE && (unsigned(name[1]) & 0xFF) == 0x80 && (unsigned(name[2]) & 0xFF) == 0x81)
             return method;
     }
 
@@ -109,13 +111,13 @@ void start()
 
     printf("\n- patching battleye init method\n");
 
-    auto main_application = mono_class_from_name(image, "EFT", "MainApplication");
+    auto main_application = mono_class_from_name(image, "EFT", "TarkovApplication");
     if (main_application == nullptr)
     {
-        printf("- can't find EFT.MainApplcation class!\n");
+        printf("- can't find EFT.TarkovApplication class!\n");
         return;
     }
-    printf("- EFT.MainApplication found, MonoClass: 0x%p\n", main_application);
+    printf("- EFT.TarkovApplication found, MonoClass: 0x%p\n", main_application);
 
     auto battleye_init_method = find_be_init(main_application);
     if (battleye_init_method == nullptr)
